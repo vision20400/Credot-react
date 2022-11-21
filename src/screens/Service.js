@@ -137,10 +137,10 @@ const Service = () => {
   };
 
   const finishLookUp = (result) => {
-    setPrice(JSON.parse(result).price);
-    setDeadline(JSON.parse(result).deadline);
+    setPrice(20000000);
+    setDeadline("2022-12-01");
     setIsChecked(true);
-    alert(result);
+    alert("선정산금 조회가 완료되었습니다");
   };
 
   const lookUp = () => {
@@ -150,83 +150,91 @@ const Service = () => {
     }
 
     setprogressOpen(true);
-    fetch(HOST + "/commerce/coupang/crawl?id=" + id + "&pw=" + pw, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-      },
-      body: JSON.stringify({
-        uid: userInfo.email,
-      }),
-      credentials: "include",
-    })
-      .then((response) => {
-        if (!response.ok) {
-          setprogressOpen(false);
-          throw new Error("400 or 500 Error");
-        }
-        return response.text();
-      })
-      .then((response) => {
-        if (!checkError(response)) {
-          setprogressOpen(false);
-          return;
-        }
+    setTimeout(() => {
+      finishLookUp();
+      setprogressOpen(false);
+    }, 2000);
 
-        if (response === "200") {
-          const inputString = prompt("인증번호를 입력해주세요", "인증번호");
-          fetch(HOST + "/commerce/coupang/auth?code=" + inputString, {
-            method: "get",
-            headers: {
-              "Content-Type": "application/json; charset=utf-8",
-            },
-            credentials: "include",
-          })
-            .then((response) => {
-              if (!response.ok) {
-                setprogressOpen(false);
-                throw new Error("400아니면 500에러남");
-              }
-              return response.text();
-            })
-            .then((response) => {
-              if (!checkError(response)) {
-                setprogressOpen(false);
-                return;
-              }
-              finishLookUp(response);
-            });
-          setprogressOpen(false);
-          return;
-        } else {
-          finishLookUp(response);
-          setprogressOpen(false);
-          return;
-        }
-      })
-      .catch((err) => {
-        alert("조회 실패... 아이디와 비번을 확인해주세요");
-      });
+    // fetch(HOST + "/commerce/coupang/crawl?id=" + id + "&pw=" + pw, {
+    //   method: "post",
+    //   headers: {
+    //     "Content-Type": "application/json; charset=utf-8",
+    //   },
+    //   body: JSON.stringify({
+    //     uid: userInfo.email,
+    //   }),
+    //   credentials: "include",
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       setprogressOpen(false);
+    //       throw new Error("400 or 500 Error");
+    //     }
+    //     return response.text();
+    //   })
+    //   .then((response) => {
+    //     if (!checkError(response)) {
+    //       setprogressOpen(false);
+    //       return;
+    //     }
+
+    //     if (response === "200") {
+    //       const inputString = prompt("인증번호를 입력해주세요", "인증번호");
+    //       fetch(HOST + "/commerce/coupang/auth?code=" + inputString, {
+    //         method: "get",
+    //         headers: {
+    //           "Content-Type": "application/json; charset=utf-8",
+    //         },
+    //         credentials: "include",
+    //       })
+    //         .then((response) => {
+    //           if (!response.ok) {
+    //             setprogressOpen(false);
+    //             throw new Error("400아니면 500에러남");
+    //           }
+    //           return response.text();
+    //         })
+    //         .then((response) => {
+    //           if (!checkError(response)) {
+    //             setprogressOpen(false);
+    //             return;
+    //           }
+    //           finishLookUp(response);
+    //         });
+    //       setprogressOpen(false);
+    //       return;
+    //     } else {
+    //       finishLookUp(response);
+    //       setprogressOpen(false);
+    //       return;
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     alert("조회 실패... 아이디와 비번을 확인해주세요");
+    //   });
   };
-  
+
   // 네브바 이동 컨트롤
   const location = useLocation(); // 현재 url을 받아서 저장
 
   useEffect(() => {
-    if (currentPath === '/' && location.pathname === '/Service')  // 홈 -> 서비스 : 서비스 창으로 스크롤
+    if (currentPath === "/" && location.pathname === "/Service")
+      // 홈 -> 서비스 : 서비스 창으로 스크롤
       window.scrollTo({
         top: document.querySelector(".calculate__check-wrap").offsetTop,
         behavior: "smooth",
       });
-    else if (location.pathname === '/Service')  // * -> 서비스 : 서비스 창으로 스크롤
+    else if (location.pathname === "/Service")
+      // * -> 서비스 : 서비스 창으로 스크롤
       window.scrollTo({
         top: document.querySelector(".calculate__check-wrap").offsetTop,
         behavior: "smooth",
       });
-    else if (currentPath === '/Service' && location.pathname === '/') // 서비스 -> 홈 : 최상단으로 스크롤
-      window.scrollTo({top : 0, behavior : "smooth"});
-    
-    currentPath = location.pathname;  // currentPath 재설정
+    else if (currentPath === "/Service" && location.pathname === "/")
+      // 서비스 -> 홈 : 최상단으로 스크롤
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+    currentPath = location.pathname; // currentPath 재설정
   }, [location]); // location이 바뀔 때마다 실행
 
   return (
@@ -329,7 +337,7 @@ const Service = () => {
                 <div className="value-wrap">
                   <span className="value-wrap-span">즉시 정산 가능 금액</span>
                   <div className="value">
-                    <strong className="strong font-eng">{price}</strong>
+                    <strong className="strong font-eng">{price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</strong>
                     <mark className="mark">원</mark>
                   </div>
                 </div>

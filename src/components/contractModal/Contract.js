@@ -47,7 +47,7 @@ const Contract = (props) => {
   }, []);
 
   return (
-    <div className='Container'>
+    <div className="Container">
       <h2 style={{ textAlign: "center" }}>
         <strong>채권양수도 계약서</strong>
       </h2>
@@ -91,7 +91,7 @@ const Contract = (props) => {
             display: "inline-block",
           }}
         >
-          ② 채권액: 금 <span className="showText">{contractData.__AMOUNT__}</span>원
+          ② 채권액: 금 <span className="showText">{contractData.__AMOUNT__.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>원
         </span>
       </p>
       <p style={{ paddingLeft: 13 }}>
